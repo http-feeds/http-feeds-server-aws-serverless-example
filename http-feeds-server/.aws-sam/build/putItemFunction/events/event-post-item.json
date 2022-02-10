@@ -1,0 +1,4 @@
+{
+    "httpMethod": "POST",
+    "body": "{\r\n    \"type\" : \"org.http-feeds.example.inventory\",\r\n    \"source\" : \"https:\/\/example.http-feeds.org\/inventory\",\r\n    \"id\" : \"1c6b8c6e-d8d0-4a91-b51c-1f56bd04c758\",\r\n    \"time\" : \"2021-01-01T00:00:01Z\",\r\n    \"subject\" : \"09938987376\",\r\n    \"data\" : {\r\n       \"sku\": \"09938987376\",\r\n       \"updated\": \"2022-01-01T00:00:01Z\",\r\n        \"quantity\": 5\r\n    }\r\n}"
+}

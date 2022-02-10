@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "http-feeds-server"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-pu2uk7z0j8qw"
+s3_prefix = "http-feeds-server"
+region = "eu-central-1"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
+disable_rollback = true
