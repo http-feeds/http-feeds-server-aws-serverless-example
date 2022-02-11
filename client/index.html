@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <script>
+        var lastEventId = null;
+
+        function createEventHandler(handler) {
+            return function (event) {
+                handler(event);
+                lastEventId = event.id;
+            }
+        }
+
+        const handleEvent = createEventHandler(event => {
+
+            let row = document.createElement("tr");
+            row.classList.add("table-row")
+
+            let idSpan = document.createElement("td");
+            idSpan.appendChild(document.createTextNode(event.id));
+            row.appendChild(idSpan);
+
+            let sourceSpan = document.createElement("td");
+            sourceSpan.appendChild(document.createTextNode(event.source));
+            row.appendChild(sourceSpan);
+
+            let typeSpan = document.createElement("td");
+            typeSpan.appendChild(document.createTextNode(event.type));
+            row.appendChild(typeSpan);
+
+            let timeSpan = document.createElement("td");
+            timeSpan.appendChild(document.createTextNode(event.time));
+            row.appendChild(timeSpan);
+
+            let element = document.createElement("td");
+            let code = document.createElement("pre");
+            element.appendChild(code);
+            code.appendChild(document.createTextNode(JSON.stringify(event, null, 2)));
+
+            row.appendChild(element);
+            document.getElementById("feed").appendChild(row);
+        });
+
+        function fetchEvents() {
+            const url = lastEventId ?
+                `https://example-serverless.http-feeds.org/inventory?lastEventId=${lastEventId}` :
+                "https://example-serverless.http-feeds.org/inventory";
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.length == 0) {
+                        window.setTimeout(fetchEvents, 5000);
+                    } else {
+                        data.forEach(handleEvent);
+                        window.setTimeout(fetchEvents, 0);
+                    }
+                });
+        }
+        fetchEvents();
+
+    </script>
+    <table id="feed">
+        <caption>Inventory Feed</caption>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>source</th>
+                <th>type</th>
+                <th>time</th>
+                <th>data</th>
+            </tr>
+        </thead>
+        <tbody id="feed">
+
+        </tbody>
+
+        </div>
+</body>
+
+</html>
