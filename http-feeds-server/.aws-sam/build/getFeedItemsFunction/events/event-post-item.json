@@ -1,4 +1,0 @@
-{
-    "httpMethod": "POST",
-    "body": "{\"type\":\"org.http-feeds.example.inventory\",\"source\":\"https:\/\/example.http-feeds.org\/inventory\",\"subject\":\"09938987376\",\"data\":{\"sku\":\"09938987376\",\"updated\":\"2022-01-01T00:00:01Z\",\"quantity\":5}}"
-}
