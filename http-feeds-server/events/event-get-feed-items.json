@@ -1,0 +1,6 @@
+{
+    "httpMethod": "GET",
+    "queryStringParameters": {
+        "lastEventId": "1c6b8c6e-d8d0-4a91-b51c-1f56bd04c000"
+    }
+}

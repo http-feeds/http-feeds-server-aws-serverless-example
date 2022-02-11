@@ -1,9 +1,5 @@
-// Create clients and set shared const values outside of the handler.
-
-// Get the DynamoDB table name from environment variables
 const tableName = process.env.FEED_TABLE;
 
-// Create a DocumentClient that represents the query to add an item
 const dynamodb = require('aws-sdk/clients/dynamodb');
 const docClient = new dynamodb.DocumentClient();
 
@@ -12,25 +8,27 @@ const docClient = new dynamodb.DocumentClient();
  */
 exports.getFeedItemsHandler = async (event) => {
     if (event.httpMethod !== 'GET') {
-        throw new Error(`getAllItems only accept GET method, you tried: ${event.httpMethod}`);
+        throw new Error(`getFeedItems only accept GET method, you tried: ${event.httpMethod}`);
     }
 
-    const lastEventId = event?.queryStringParameters?.lastEventId || "" 
+    console.info('request:', event);
 
-    console.info('received:', event);
+    const lastEventId = extractLastEventId(event)
 
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property
-    // https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html
-    var params = {
-        TableName : tableName,
+    console.info('lastEventId:', lastEventId);
+
+    // Query results are always sorted by the sort key value (this is the event Id).
+    const params = {
+        TableName: tableName,
         ScanFilter: {
             'id': {
-              ComparisonOperator: "GT",
-              AttributeValueList: [
-                lastEventId
-              ]
+                ComparisonOperator: "GT",
+                AttributeValueList: [
+                    lastEventId
+                ]
             }
-          }
+        },
+        Limit: 1000
     };
     const data = await docClient.scan(params).promise();
 
@@ -46,4 +44,12 @@ exports.getFeedItemsHandler = async (event) => {
 
     console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
     return response;
+}
+
+function extractLastEventId(event) {
+    if (!event.queryStringParameters?.lastEventId) {
+        return ""
+    }
+
+    return event.queryStringParameters.lastEventId;
 }

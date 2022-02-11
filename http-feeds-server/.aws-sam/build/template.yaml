@@ -12,8 +12,7 @@ Resources:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from
-        a DynamoDB table.
+      Description: Retrieves feed items.
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -28,20 +27,22 @@ Resources:
           Properties:
             Path: /
             Method: GET
+            RequestParameters:
+            - method.request.querystring.lastEventId:
+                Required: false
       CodeUri: getFeedItemsFunction
     Metadata:
       SamResourceId: getFeedItemsFunction
-  getAllItemsFunction:
+  appendItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/get-all-items.getAllItemsHandler
+      Handler: src/handlers/append-item.appendItemHandler
       Runtime: nodejs14.x
       Architectures:
       - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from
-        a DynamoDB table.
+      Description: Appends an event to the feed.
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
@@ -50,71 +51,16 @@ Resources:
         Variables:
           FEED_TABLE:
             Ref: InventoryFeed
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /all
-            Method: GET
-      CodeUri: getAllItemsFunction
-    Metadata:
-      SamResourceId: getAllItemsFunction
-  getByIdFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/get-by-id.getByIdHandler
-      Runtime: nodejs14.x
-      Architectures:
-      - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get one item by
-        id from a DynamoDB table.
-      Policies:
-      - DynamoDBCrudPolicy:
-          TableName:
-            Ref: InventoryFeed
-      Environment:
-        Variables:
-          FEED_TABLE:
-            Ref: InventoryFeed
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /{id}
-            Method: GET
-      CodeUri: getByIdFunction
-    Metadata:
-      SamResourceId: getByIdFunction
-  putItemFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/put-item.putItemHandler
-      Runtime: nodejs14.x
-      Architectures:
-      - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
-      Policies:
-      - DynamoDBCrudPolicy:
-          TableName:
-            Ref: InventoryFeed
-      Environment:
-        Variables:
-          FEED_TABLE:
-            Ref: InventoryFeed
+          SHOULD_COMPACT: true
       Events:
         Api:
           Type: Api
           Properties:
             Path: /
             Method: POST
-      CodeUri: putItemFunction
+      CodeUri: appendItemFunction
     Metadata:
-      SamResourceId: putItemFunction
+      SamResourceId: appendItemFunction
   InventoryFeed:
     Type: AWS::DynamoDB::Table
     Properties:
