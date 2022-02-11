@@ -35,10 +35,19 @@ exports.getFeedItemsHandler = async (event) => {
     console.info('received data:', data);
 
     const items = data.Items;
-    const events = items.map(i => { i.data = JSON.parse(i.data); return i; });
+    const events = items.map(i => {
+        i.specversion = "1.0";
+        i.datacontenttype = "application/json";
+        i.data = JSON.parse(i.data); return i;
+    });
 
     const response = {
         statusCode: 200,
+        headers: {
+            "Access-Control-Allow-Headers" : "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, OPTIONS, POST"
+        },
         body: JSON.stringify(events)
     };
 
