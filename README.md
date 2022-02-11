@@ -1,6 +1,6 @@
 # http-feeds-server-aws-serverless-example
 
-This is an example implementation, how to implement an [HTTP Feed](https://www.http-feeds.org) Server Endpoint Serverless with AWS Lambda and AWS DynamoDB.
+This is an example, how to implement an [HTTP Feed](https://www.http-feeds.org) Server Endpoint Serverless with AWS Lambda and AWS DynamoDB.
 
 ## Content
 
